@@ -20,11 +20,11 @@ struct FigmaTokenGenerator: ParsableCommand {
                 return
             }
             let keys = DesignTokenJsonParser().parseMap(json)
-            print(keys)
+            try FileWritter().write(keys, to: outputPath)
+            success("DesignTokenIdentity successfully generated at \(outputPath)")
         } catch {
-            print(error)
+            fail(error.localizedDescription)
         }
-        print(inputPath, outputPath)
     }
 }
 
