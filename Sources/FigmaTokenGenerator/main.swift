@@ -9,7 +9,14 @@ struct FigmaTokenGenerator: ParsableCommand {
     var outputPath: String
 
     func run() {
-        print(inputPath)
+        do {
+            let jsonString = try String.init(contentsOfFile: inputPath)
+            try jsonString.write(toFile: outputPath, atomically: true, encoding: .utf8)
+            print(jsonString)
+        } catch {
+            print(error)
+        }
+        print(inputPath, outputPath)
     }
 }
 
