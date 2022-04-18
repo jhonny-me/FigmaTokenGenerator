@@ -10,9 +10,17 @@ struct FigmaTokenGenerator: ParsableCommand {
 
     func run() {
         do {
-            let jsonString = try String.init(contentsOfFile: inputPath)
-            try jsonString.write(toFile: outputPath, atomically: true, encoding: .utf8)
-            print(jsonString)
+            let jsonString = try String(contentsOfFile: inputPath)
+            guard let data = jsonString.data(using: .utf8) else {
+                fail("invalid input path")
+                return
+            }
+            guard let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+                fail("fail to read json")
+                return
+            }
+            let keys = DesignTokenJsonParser().parseMap(json)
+            print(keys)
         } catch {
             print(error)
         }
