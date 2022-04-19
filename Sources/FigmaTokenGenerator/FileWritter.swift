@@ -11,7 +11,7 @@ class FileWritter {
     func write(_ array: [String], to outputPath: String) throws {
         let outputString = """
 //
-//  DesignTokenConstants.swift
+//  DesignTokenIdentity.swift
 //
 //
 //  Updated by DesignTokenGenerator on \(currentTimestamp())
@@ -31,7 +31,7 @@ public struct DesignTokenIdentity {
             let characterSet = CharacterSet(charactersIn: "/-")
             let keyComponents = key.components(separatedBy: characterSet).filter { !$0.isEmpty }
             let keyToken = keyComponents[1...].reduce(keyComponents[0], { $0 + $1.firstCapitalized })
-            return "\tstatic let \(keyToken) = \"\(key)\""
+            return "\tpublic static let \(keyToken) = \"\(key)\""
         }).joined(separator: "\n")
     }
 
