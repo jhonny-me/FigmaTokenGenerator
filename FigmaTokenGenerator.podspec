@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'FigmaTokenGenerator'
-  s.version          = '0.1.0'
+  s.version          = '0.1.2'
   s.summary          = 'Swift Command line tool to generate static strings from a Figma Design Token Json file.'
   s.homepage         = 'https://github.com/jhonny-me/FigmaTokenGenerator'
   s.license          = { :type => 'MIT', :file => 'LICENSE.md' }
