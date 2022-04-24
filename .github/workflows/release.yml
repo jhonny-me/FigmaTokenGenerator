@@ -31,6 +31,17 @@ jobs:
     - name: Build fat binary
       run: |
         swift build -c release --arch x86_64 --arch arm64
+
+    - name: Import Signing Certificates
+      uses: apple-actions/import-codesign-certs@v1
+      with:
+        p12-file-base64: ${{ secrets.APPLE_CERTS }}
+        p12-password: ${{ secrets.APPLE_CERTS_PASSWORD }}
+
+    - name: Code Sign
+      run: |
+        codesign --force --options runtime --sign 'Developer ID Application: Qiang Gu (GZG2S47WHM)' .build/apple/Products/Release/FigmaTokenGenerator
+
     - name: Store build artifact
       uses: actions/upload-artifact@v1
       with:
@@ -39,6 +50,17 @@ jobs:
 
     - name: Archive ZIP
       run: zip --junk-paths ${{ runner.temp }}/FigmaTokenGenerator-${{ github.event.release.tag_name }}.zip .build/apple/Products/Release/FigmaTokenGenerator LICENSE.md
+
+    - name: Notarize ZIP
+      run: |
+        sh notarize.sh
+      env:
+        BUNDLE_ID: com.johnny.FigmaTokenGenerator
+        DEV_ACCOUNT: ${{ secrets.APPLE_ID_EMAIL }}
+        PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+        DEV_TEAM: GZG2S47WHM
+        FILENAME: ${{ runner.temp }}/FigmaTokenGenerator-${{ github.event.release.tag_name }}.zip
+          
     - name: Attach ZIP to release
       uses: actions/upload-release-asset@v1
       env:
